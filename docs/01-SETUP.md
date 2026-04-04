@@ -218,8 +218,8 @@ With HTTPS you use a **Personal Access Token (PAT)** — NOT your GitHub passwor
 
 The first time you push, Git will ask for credentials:
 ```
-Username: sarowar-alam          â† your GitHub username
-Password: ghp_xxxxxxxxxxxx      â† paste your PAT here (not your password!)
+Username: sarowar-alam          ← your GitHub username
+Password: ghp_xxxxxxxxxxxx      ← paste your PAT here (not your password!)
 ```
 
 #### Save credentials (so you don't type every time)

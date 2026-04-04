@@ -185,7 +185,7 @@ Reviewer (Developer B):
 4. Clicks "Review changes" →
    - "Comment" — leave comments only
    - "Approve" — approve the PR ✅
-   - "Request changes" — block merge until addressed âŒ
+   - "Request changes" — block merge until addressed ❌
 
 Developer A:
 5. Addresses feedback, pushes more commits
@@ -272,7 +272,7 @@ Apply similar rules to `develop` — the integration branch.
 | Required approvals | 2 | 1 |
 | Require CI to pass | ✅ | ✅ |
 | Dismiss stale reviews | ✅ | ✅ |
-| Admin bypass | âŒ (none) | ✅ (admin only) |
+| Admin bypass | ❌ (none) | ✅ (admin only) |
 
 **Steps to add protection for `develop`:**2
 

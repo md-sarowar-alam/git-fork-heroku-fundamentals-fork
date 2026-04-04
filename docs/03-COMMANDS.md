@@ -224,10 +224,10 @@ git status
 
 # Short/compact output
 git status -s
-# M  index.js    â† staged modification
-#  M style.css   â† unstaged modification
-# ?? new-file.js â† untracked file
-# A  added.js    â† new file staged
+# M  index.js    ← staged modification
+#  M style.css   ← unstaged modification
+# ?? new-file.js ← untracked file
+# A  added.js    ← new file staged
 
 # Show branch info + status
 git status -sb

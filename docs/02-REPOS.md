@@ -32,10 +32,10 @@ A **repository (repo)** is a directory tracked by Git. It stores:
 
 ```
 my-project/
-â”œâ”€â”€ .git/          â† Git's database (don't touch this manually)
-â”œâ”€â”€ src/
-â”œâ”€â”€ README.md
-â””â”€â”€ package.json
+├── .git/          ← Git's database (don't touch this manually)
+├── src/
+├── README.md
+└── package.json
 ```
 
 There are two types:
@@ -113,13 +113,13 @@ git clone --depth 1 https://github.com/user/repo.git
 
 ```
 Remote: github.com/sarowar-alam/git-fork-heroku-fundamentals
-           â†“ git clone
+           ↓ git clone
 Local:   ~/projects/git-fork-heroku-fundamentals/
-         â”œâ”€â”€ .git/
-         â”‚   â”œâ”€â”€ config          â† remote "origin" is set automatically
-         â”‚   â””â”€â”€ refs/remotes/origin/main
-         â”œâ”€â”€ index.js
-         â””â”€â”€ ...
+         ├── .git/
+         │   ├── config          ← remote "origin" is set automatically
+         │   └── refs/remotes/origin/main
+         ├── index.js
+         └── ...
 ```
 
 Git automatically sets the clone source as the `origin` remote.
@@ -518,20 +518,20 @@ The `.git` folder IS the repository. Delete it and you lose all history.
 
 ```
 .git/
-â”œâ”€â”€ HEAD            â† points to current branch (e.g., "ref: refs/heads/main")
-â”œâ”€â”€ config          â† repo-local Git config + remotes
-â”œâ”€â”€ description     â† used by GitWeb (ignore for normal use)
-â”œâ”€â”€ hooks/          â† scripts that run on git events (pre-commit, post-push, etc.)
-â”œâ”€â”€ info/
-â”‚   â””â”€â”€ exclude     â† like .gitignore, but not committed
-â”œâ”€â”€ objects/        â† all data: commits, trees, blobs (your file contents)
-â”‚   â”œâ”€â”€ pack/       â† packed objects for efficiency  
-â”‚   â””â”€â”€ info/
-â”œâ”€â”€ refs/
-â”‚   â”œâ”€â”€ heads/      â† local branches → refs/heads/main = hash of latest commit
-â”‚   â”œâ”€â”€ remotes/    â† remote-tracking branches
-â”‚   â””â”€â”€ tags/       â† tags
-â””â”€â”€ COMMIT_EDITMSG  â† last commit message (used by --amend)
+├── HEAD            ← points to current branch (e.g., "ref: refs/heads/main")
+├── config          ← repo-local Git config + remotes
+├── description     ← used by GitWeb (ignore for normal use)
+├── hooks/          ← scripts that run on git events (pre-commit, post-push, etc.)
+├── info/
+│   └── exclude     ← like .gitignore, but not committed
+├── objects/        ← all data: commits, trees, blobs (your file contents)
+│   ├── pack/       ← packed objects for efficiency  
+│   └── info/
+├── refs/
+│   ├── heads/      ← local branches → refs/heads/main = hash of latest commit
+│   ├── remotes/    ← remote-tracking branches
+│   └── tags/       ← tags
+└── COMMIT_EDITMSG  ← last commit message (used by --amend)
 ```
 
 **Everything in Git is just files in `.git/objects/`.** Git uses SHA-1/SHA-256 hashes as file names.
@@ -588,14 +588,14 @@ git remote show origin
 
 ## 10. Upstream Remote — Deep Dive
 
-### What “upstreamâ€ really means
+### What “upstream” really means
 
 ```
-github.com/ORIGINAL-OWNER/project    â† upstream
-         â†“ fork
-github.com/YOUR-USERNAME/project     â† origin
-         â†“ clone
-~/projects/project                   â† local
+github.com/ORIGINAL-OWNER/project    ← upstream
+         ↓ fork
+github.com/YOUR-USERNAME/project     ← origin
+         ↓ clone
+~/projects/project                   ← local
 ```
 
 - `upstream` = the authoritative source. You never push to upstream (unless you’re a maintainer).
@@ -668,7 +668,7 @@ This is the standard open-source contribution workflow — used to contribute to
 ### Step-by-Step
 
 ```bash
-# â”€â”€ PHASE 1: ONE-TIME SETUP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── PHASE 1: ONE-TIME SETUP ───────────────────────────
 
 # 1. Fork on GitHub (click Fork button)
 
@@ -686,7 +686,7 @@ git remote -v
 # upstream  https://github.com/ORIGINAL-OWNER/project.git (fetch)
 # upstream  https://github.com/ORIGINAL-OWNER/project.git (push)
 
-# â”€â”€ PHASE 2: BEFORE EACH CONTRIBUTION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── PHASE 2: BEFORE EACH CONTRIBUTION ─────────────────────
 
 # 4. Pull latest from upstream to stay current
 git switch main
@@ -697,7 +697,7 @@ git merge upstream/main
 # 5. Push synced main to your fork
 git push origin main
 
-# â”€â”€ PHASE 3: MAKE YOUR CHANGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── PHASE 3: MAKE YOUR CHANGE ──────────────────────────
 
 # 6. Create feature branch
 git switch -c fix/typo-in-readme
@@ -709,7 +709,7 @@ nano README.md
 git add README.md
 git commit -m "docs: fix typo in installation section"
 
-# â”€â”€ PHASE 4: SYNC BEFORE PUSH (important!) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── PHASE 4: SYNC BEFORE PUSH (important!) ────────────────
 
 # 9. Check if upstream has new commits since you branched
 git fetch upstream
@@ -722,7 +722,7 @@ git rebase upstream/main
 # git add .
 # git rebase --continue
 
-# â”€â”€ PHASE 5: PUSH AND OPEN PR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── PHASE 5: PUSH AND OPEN PR ─────────────────────────
 
 # 11. Push feature branch to YOUR fork
 git push -u origin fix/typo-in-readme
@@ -731,7 +731,7 @@ git push -u origin fix/typo-in-readme
 # Go to: github.com/ORIGINAL-OWNER/project
 # You’ll see: "fix/typo-in-readme had recent pushes — Compare & pull request"
 
-# â”€â”€ PHASE 6: RESPOND TO FEEDBACK â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── PHASE 6: RESPOND TO FEEDBACK ───────────────────────
 
 # 13. If reviewer requests changes:
 git add .
@@ -743,7 +743,7 @@ git fetch upstream
 git rebase upstream/main
 git push --force-with-lease origin fix/typo-in-readme
 
-# â”€â”€ PHASE 7: AFTER MERGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── PHASE 7: AFTER MERGE ────────────────────────────
 
 # 15. Switch back to main
 git switch main
@@ -804,7 +804,7 @@ Now every new PR opens pre-filled with your template.
 
 ### Draft PRs
 
-A **Draft PR** signals: “I’m not done yet — do NOT merge, but feedback welcome.â€
+A **Draft PR** signals: “I’m not done yet — do NOT merge, but feedback welcome.”
 
 **When to use:**
 - Work in progress you want early feedback on
@@ -932,9 +932,9 @@ gh pr reopen 45
 A practical example contributing to this repo.
 
 ```bash
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ───────────────────────────────────────────────────────────
 # SCENARIO: You found a bug in docs/03-COMMANDS.md
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ───────────────────────────────────────────────────────────
 
 # 1. Fork on GitHub:
 #    github.com/sarowar-alam/git-fork-heroku-fundamentals → Fork
@@ -994,9 +994,9 @@ git push origin main
 git branch -d fix/commands-doc-typo
 git push origin --delete fix/commands-doc-typo
 
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ───────────────────────────────────────────────────────────
 # Done! Your contribution is now part of the project.
-# â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ───────────────────────────────────────────────────────────
 ```
 
 ---
@@ -1030,9 +1030,9 @@ Can do:
   ✅ Comment on issues and PRs
 
 Cannot do:
-  âŒ Push any code
-  âŒ Merge pull requests
-  âŒ Change settings
+  ❌ Push any code
+  ❌ Merge pull requests
+  ❌ Change settings
 ```
 
 **Example:** A client needs to review your code — give them **Read**.
@@ -1052,8 +1052,8 @@ Can do everything Read can, plus:
   ✅ Manage GitHub Discussions
 
 Cannot do:
-  âŒ Push code
-  âŒ Merge PRs
+  ❌ Push code
+  ❌ Merge PRs
 ```
 
 **Example:** A scrum master organizes backlog issues — give them **Triage**.
@@ -1073,9 +1073,9 @@ Can do everything Triage can, plus:
   ✅ Create GitHub Actions workflows
 
 Cannot do:
-  âŒ Push directly to protected branches (main, develop)
-  âŒ Change branch protection rules
-  âŒ Manage collaborators
+  ❌ Push directly to protected branches (main, develop)
+  ❌ Change branch protection rules
+  ❌ Manage collaborators
 ```
 
 **Example:** A junior developer joins your team — give them **Write**.
@@ -1095,10 +1095,10 @@ Can do everything Write can, plus:
   ✅ Archive the repository
 
 Cannot do:
-  âŒ Delete the repository
-  âŒ Transfer ownership
-  âŒ Manage team access
-  âŒ Change visibility (public/private)
+  ❌ Delete the repository
+  ❌ Transfer ownership
+  ❌ Manage team access
+  ❌ Change visibility (public/private)
 ```
 
 **Example:** A tech lead who manages releases but shouldn't be able to delete the repo — give them **Maintain**.
@@ -1114,7 +1114,7 @@ Can do everything Maintain can, plus:
   ✅ Delete the repository
   ✅ Archive the repository
   ✅ Transfer ownership
-  ✅ Change visibility (public â†” private)
+  ✅ Change visibility (public ↔ private)
   ✅ Add and remove collaborators
   ✅ Set and change branch protection rules
   ✅ Enable/disable features (Issues, Wiki, Discussions)

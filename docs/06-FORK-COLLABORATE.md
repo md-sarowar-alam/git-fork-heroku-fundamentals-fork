@@ -26,9 +26,9 @@ A **fork** is a personal copy of someone else's repository, hosted under your ow
 
 ```
 Original repo:    github.com/original-owner/project
-                          â†“ fork
+                          ↓ fork
 Your fork:        github.com/sarowar-alam/project
-                          â†“ clone
+                          ↓ clone
 Your machine:     ~/projects/project
 ```
 
@@ -250,7 +250,7 @@ Addresses issue #42 — dark mode request from users.
 5. When done reviewing → click **Review changes**:
    - **Comment**: general feedback, no block
    - **Approve**: ✅ changes look good, ready to merge
-   - **Request changes**: âŒ must address issues before merging
+   - **Request changes**: ❌ must address issues before merging
 
 ### As the PR Author
 
@@ -280,9 +280,9 @@ When merging a PR, GitHub offers three strategies. Choose based on your branch s
 ### Create a Merge Commit (default)
 
 ```
-main: A â”€â”€ B â”€â”€ C â”€â”€ M
-                     â†‘ (merge commit with 2 parents)
-feature:      D â”€â”€ E â”˜
+main: A ── B ── C ── M
+                     ↑ (merge commit with 2 parents)
+feature:      D ── E ┘
 ```
 
 - Preserves full branch history
@@ -299,9 +299,9 @@ git merge --no-ff feature/add-dark-mode
 ### Squash and Merge
 
 ```
-main: A â”€â”€ B â”€â”€ C â”€â”€ S
-                     â†‘ (single commit — all feature commits squashed)
-feature:      D â”€â”€ E (D + E squashed into S)
+main: A ── B ── C ── S
+                     ↑ (single commit — all feature commits squashed)
+feature:      D ── E (D + E squashed into S)
 ```
 
 - All feature commits become one clean commit on main
@@ -319,8 +319,8 @@ git commit -m "feat: add dark mode toggle (#45)"
 ### Rebase and Merge
 
 ```
-main: A â”€â”€ B â”€â”€ C â”€â”€ D' â”€â”€ E'
-                      â†‘ replayed commits (D and E rebased)
+main: A ── B ── C ── D' ── E'
+                      ↑ replayed commits (D and E rebased)
 ```
 
 - Each feature commit is replayed on top of main
@@ -369,18 +369,18 @@ git push origin --delete feature/add-dark-mode
 ## 11. Complete Collaboration Workflow Summary
 
 ```bash
-# â”€â”€ SETUP (one time) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── SETUP (one time) ──────────────────────────────────
 git clone git@github.com:sarowar-alam/project.git
 cd project
 git remote add upstream https://github.com/original/project.git
 
-# â”€â”€ BEFORE EACH FEATURE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── BEFORE EACH FEATURE ───────────────────────────────
 git switch main
 git fetch upstream
 git merge upstream/main          # sync with latest
 git push origin main             # update your fork
 
-# â”€â”€ WORKING ON A FEATURE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── WORKING ON A FEATURE ──────────────────────────────
 git switch -c feature/my-feature
 # ... make changes ...
 git add .
@@ -388,21 +388,21 @@ git commit -m "feat: describe the feature"
 git push -u origin feature/my-feature
 # → Go to GitHub → Open Pull Request
 
-# â”€â”€ DURING REVIEW (if feedback) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── DURING REVIEW (if feedback) ───────────────────────
 # ... make fixes ...
 git add .
 git commit -m "fix: address review comments"
 git push
 # → Re-request review on GitHub
 
-# â”€â”€ AFTER PR IS MERGED â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── AFTER PR IS MERGED ────────────────────────────────
 git switch main
 git pull upstream main
 git push origin main
 git branch -d feature/my-feature
 git push origin --delete feature/my-feature
 
-# â”€â”€ REPEAT for next feature â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── REPEAT for next feature ───────────────────────────
 ```
 
 ---

@@ -175,7 +175,7 @@ Go to `https://github.com/sarowar-alam/git-fork-heroku-fundamentals` to confirm.
 
 # Create the Heroku app with your chosen name
 heroku create ostad-devops
-# Creating â¬¢ ostad-devops... done
+# Creating ⬢ ostad-devops... done
 # https://ostad-devops.herokuapp.com/ | https://git.heroku.com/ostad-devops.git
 
 # Verify a 'heroku' remote was added
@@ -282,7 +282,7 @@ heroku restart web.1   # restart specific dyno
 **Common log patterns:**
 ```
 2026-04-04T10:00:00 app[web.1]: Server running on http://localhost:3000
-        â†‘ timestamp   â†‘ source    â†‘ your app's console.log output
+        ↑ timestamp   ↑ source    ↑ your app's console.log output
 ```
 
 ---
@@ -448,7 +448,7 @@ Common causes:
 - `npm start` fails (missing dependency)
 - Port not bound correctly — Express must use `process.env.PORT`:
   ```javascript
-  const PORT = process.env.PORT || 3000;  // â† must include process.env.PORT
+  const PORT = process.env.PORT || 3000;  // ← must include process.env.PORT
   app.listen(PORT, ...);
   ```
 - Missing dependency in `package.json` (was installed globally locally but not listed)
@@ -465,7 +465,7 @@ heroku create ostad-devops-2026
 heroku create ostad-sarowar-devops
 # Or leave blank — Heroku auto-generates a name
 heroku create
-# Creating â¬¢ tranquil-meadow-12345... done
+# Creating ⬢ tranquil-meadow-12345... done
 ```
 
 ---

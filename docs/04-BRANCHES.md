@@ -23,9 +23,9 @@
 A **branch** is a lightweight, movable pointer to a commit. Creating a branch costs nothing — it's just a 41-byte file in `.git/refs/heads/`.
 
 ```
-main:     A â† B â† C â† D (HEAD)
-                    â†‘
-feature:            E â† F (HEAD of feature)
+main:     A ← B ← C ← D (HEAD)
+                    ↑
+feature:            E ← F (HEAD of feature)
 ```
 
 Each team member works on their own branch. When done, branches are merged back.
@@ -143,12 +143,12 @@ If the target branch has no new commits since the branch point, Git just moves t
 
 ```
 Before:
-main:     A â† B â† C
-                   â†‘
-feature:           D â† E
+main:     A ← B ← C
+                   ↑
+feature:           D ← E
 
 After (fast-forward):
-main:     A â† B â† C â† D â† E
+main:     A ← B ← C ← D ← E
 ```
 
 ```bash
@@ -167,14 +167,14 @@ If both branches have diverged (both have new commits), Git creates a **merge co
 
 ```
 Before:
-main:     A â† B â† C â† D
-                   â†‘
-feature:           E â† F
+main:     A ← B ← C ← D
+                   ↑
+feature:           E ← F
 
 After (3-way merge):
-main:     A â† B â† C â† D â† M (merge commit, 2 parents)
-                   â†‘       â†‘
-feature:           E â† F â”€â”€â”˜
+main:     A ← B ← C ← D ← M (merge commit, 2 parents)
+                   ↑       ↑
+feature:           E ← F ──┘
 ```
 
 ```bash
@@ -240,7 +240,7 @@ git status
 
 # 3. Open the file and resolve manually
 # Edit app.js to the correct final state:
-# const PORT = process.env.PORT || 3000;  â† keep the better version
+# const PORT = process.env.PORT || 3000;  ← keep the better version
 
 # 4. Stage the resolved file
 git add app.js
@@ -279,14 +279,14 @@ Rebase rewrites commit history by replaying commits on top of a different base.
 
 ```
 Before rebase:
-main:    A â† B â† C â† D
-                  â†‘
-feature:          E â† F
+main:    A ← B ← C ← D
+                  ↑
+feature:          E ← F
 
 After: git rebase main (while on feature)
-main:    A â† B â† C â† D
-                       â†‘
-feature:               E' â† F'  (new commits, same changes)
+main:    A ← B ← C ← D
+                       ↑
+feature:               E' ← F'  (new commits, same changes)
 ```
 
 ```bash
@@ -340,8 +340,8 @@ Change `pick` to:
 **Example — squash 3 commits into 1:**
 ```
 pick a3f9c2b feat: add user auth
-squash b4d8e1f fix: typo            â† will merge into above
-squash c5e7f2a chore: lint fix      â† will merge into above
+squash b4d8e1f fix: typo            ← will merge into above
+squash c5e7f2a chore: lint fix      ← will merge into above
 ```
 
 ---
@@ -416,15 +416,15 @@ Consistent naming makes branches easy to understand at a glance.
 The classic strategy for teams with scheduled releases.
 
 ```
-main          â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–º (production)
+main          ───────────────────────────────────► (production)
                 \                           /
-hotfix           â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+hotfix           ──────────────────────────
                   \
-release/v1.0       â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+release/v1.0       ──────────────────────
                      \                  /
-develop          â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–º (integration)
+develop          ──────────────────────────────────► (integration)
                   \          /    \        /
-feature/login      â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€      â”€â”€â”€â”€â”€â”€â”€â”€
+feature/login      ──────────      ────────
 feature/profile
 ```
 
@@ -465,9 +465,9 @@ git branch -d release/v1.0.0
 Simpler, used by large tech companies (Google, Facebook). Everyone commits to `main` frequently.
 
 ```
-main    â”€â”€ A â”€â”€ B â”€â”€ C â”€â”€ D â”€â”€ E â”€â”€â–º  (always deployable)
-            â†‘       â†‘
-feature  â”€â”€â”€â”˜       â””â”€â”€â”€ (short-lived, <2 days)
+main    ── A ── B ── C ── D ── E ──►  (always deployable)
+            ↑       ↑
+feature  ───┘       └─── (short-lived, <2 days)
 ```
 
 **Key practices:**
