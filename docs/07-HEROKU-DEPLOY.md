@@ -17,6 +17,7 @@
 9. [Connect GitHub for Auto-Deploy](#9-connect-github-for-auto-deploy)
 10. [Environment Variables on Heroku](#10-environment-variables-on-heroku)
 11. [Common Errors & Fixes](#11-common-errors--fixes)
+12. [Stop & Delete a Heroku App](#12-stop--delete-a-heroku-app)
 
 ---
 
@@ -133,7 +134,29 @@ heroku auth:whoami
 # sarowar@example.com
 ```
 
-If you see your email, you're authenticated. 
+If you see your email, you're authenticated.
+
+#### Step 4 — Embed the API key in the Heroku Git remote URL
+
+> **Why this is needed:** `HEROKU_API_KEY` authenticates the Heroku CLI, but `git push` uses Git's own credential system and will still prompt for a username/password unless the key is embedded in the remote URL.
+
+```bash
+git remote set-url heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/<your-app-name>.git
+```
+
+For the `ostad-devops` app:
+```bash
+git remote set-url heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/ostad-devops.git
+```
+
+Verify the remote now contains the key:
+```bash
+git remote -v
+# heroku  https://heroku:HRKU-...@git.heroku.com/ostad-devops.git (fetch)
+# heroku  https://heroku:HRKU-...@git.heroku.com/ostad-devops.git (push)
+```
+
+> **Note:** If you regenerate your API key, repeat this step with the new key.
 
 ---
 
@@ -184,6 +207,10 @@ git remote -v
 # heroku  https://git.heroku.com/ostad-devops.git (push)
 # origin  https://github.com/sarowar-alam/git-fork-heroku-fundamentals.git (fetch)
 # origin  https://github.com/sarowar-alam/git-fork-heroku-fundamentals.git (push)
+
+# ⚠️  IMPORTANT: Embed API key in the remote URL so git push never prompts
+# (heroku create sets a plain URL — Git cannot use HEROKU_API_KEY on its own)
+git remote set-url heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/ostad-devops.git
 
 # Deploy by pushing to the heroku remote
 git push heroku main
@@ -396,7 +423,26 @@ source ~/.bashrc
 
 ---
 
-### Error: `Authentication required` / API key not working
+### Error: `git push heroku main` prompts for Username/Password
+
+`heroku create` adds a plain HTTPS remote. Git cannot read `HEROKU_API_KEY` — you must embed the key in the URL:
+
+```bash
+# Make sure HEROKU_API_KEY is exported first
+export HEROKU_API_KEY=your-api-key-here
+
+# Embed the key in the remote URL
+git remote set-url heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/ostad-devops.git
+
+# Now push works without prompting
+git push heroku main
+```
+
+If you regenerate your API key, re-run `git remote set-url` with the new key.
+
+---
+
+### Error: `Authentication required` / `heroku auth:whoami` fails
 ```bash
 # Check the variable is set
 echo $HEROKU_API_KEY
@@ -480,6 +526,7 @@ Before every production deploy:
 - [ ] App uses `process.env.PORT` for the port
 - [ ] All dependencies are in `dependencies` (not `devDependencies`)
 - [ ] No hardcoded secrets (use `heroku config:set` instead)
+- [ ] Heroku remote URL contains the API key (`git remote set-url heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/<app>.git`)
 - [ ] `git push heroku main` completes without errors
 - [ ] `heroku open` shows the live app
 
@@ -499,7 +546,10 @@ git log --oneline -5             # confirm latest commits
 # 3. Create Heroku app (first time only)
 heroku create ostad-devops
 
-# 4. Deploy
+# 4. Embed API key in remote URL (required — plain URL will prompt for credentials)
+git remote set-url heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/ostad-devops.git
+
+# 5. Deploy
 git push heroku main
 
 # 5. Verify
@@ -522,6 +572,93 @@ https://ostad-devops.herokuapp.com
 ```
 
 You've completed the full journey: **GitHub account → Git CLI → Repositories → Commands → Branches → Protection → Fork & Collaborate → Deploy**.
+
+---
+
+## 12. Stop & Delete a Heroku App
+
+### Stop the app (pause — keeps everything intact)
+
+Scale the web dyno to 0. The app URL becomes unavailable but all config, code, and data remain.
+
+```bash
+# Stop
+heroku ps:scale web=0 --app ostad-devops
+
+# Start again
+heroku ps:scale web=1 --app ostad-devops
+
+# Check current state
+heroku ps --app ostad-devops
+# web.1: up ...    ← running
+# (no output)      ← stopped (0 dynos)
+```
+
+> **Always use `--app <name>`** — the CLI requires it when not inside a repo that has the heroku remote configured.
+
+---
+
+### Show a maintenance page
+
+Keeps the dyno running but shows a Heroku maintenance page to visitors instead of your app:
+
+```bash
+# Enable maintenance mode
+heroku maintenance:on --app ostad-devops
+
+# Disable maintenance mode
+heroku maintenance:off --app ostad-devops
+
+# Check status
+heroku maintenance --app ostad-devops
+```
+
+---
+
+### Delete the app permanently
+
+> ⚠️ **Irreversible.** Deletes the app, its URL, all config vars, and add-ons. The app name is released back to the public pool and may be claimed by someone else immediately.
+
+```bash
+heroku destroy ostad-devops --confirm ostad-devops
+# Destroying ⬢ ostad-devops (including all add-ons)... done
+```
+
+Without `--confirm`, Heroku prompts you to type the app name manually as a safety check.
+
+---
+
+### Recreate after destroy
+
+If you deleted the app and want it back:
+
+```bash
+# Make sure API key is still set
+echo $HEROKU_API_KEY
+
+# Recreate (use the same name if still available, or a new one)
+heroku create ostad-devops
+
+# Embed API key in remote URL
+git remote set-url heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/ostad-devops.git
+
+# Redeploy
+git push heroku main
+```
+
+> If the name is taken, use a variant: `heroku create ostad-devops-2026`
+
+---
+
+### Quick reference
+
+| Goal | Command |
+|---|---|
+| Pause app (keep data) | `heroku ps:scale web=0 --app <name>` |
+| Resume app | `heroku ps:scale web=1 --app <name>` |
+| Show maintenance page | `heroku maintenance:on --app <name>` |
+| Check dyno state | `heroku ps --app <name>` |
+| **Permanently delete** | `heroku destroy <name> --confirm <name>` |
 
 ---
 
