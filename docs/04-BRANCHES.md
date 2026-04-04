@@ -15,6 +15,7 @@
 7. [Branch Naming Conventions](#7-branch-naming-conventions)
 8. [Branching Strategies](#8-branching-strategies)
 9. [Modern Git Commands: switch & restore](#9-modern-git-commands-switch--restore)
+10. [Complete Feature Branch Workflow](#10-complete-feature-branch-workflow)
 
 ---
 
@@ -540,6 +541,149 @@ git restore --source a3f9c2b index.js
 ```
 
 > `git checkout` still works — these are just clearer alternatives.
+
+---
+
+---
+
+## 10. Complete Feature Branch Workflow
+
+This is the exact sequence for the most common daily task: **start on `main`, create a feature branch, make changes, and get them into `main`**.
+
+```
+main:          A ← B ←─────────────────── M  ← (your feature is now in main)
+                    ↑                      ↑
+feature/login:      C ← D ← E ────────────┘
+```
+
+---
+
+### Step 1 — Start from an up-to-date `main`
+
+```bash
+git switch main
+git pull origin main
+```
+
+> Always sync before branching — avoids merge conflicts later.
+
+---
+
+### Step 2 — Create and switch to `feature/login`
+
+```bash
+git switch -c feature/login
+```
+
+Verify you're on the new branch:
+```bash
+git branch
+# * feature/login
+#   main
+```
+
+---
+
+### Step 3 — Make your changes
+
+Edit any files you need, then stage and commit:
+
+```bash
+# Edit files...
+
+git add .
+git commit -m "feat: add login page"
+```
+
+Repeat as many times as needed — each logical change gets its own commit:
+
+```bash
+git add login.js
+git commit -m "feat: add login form validation"
+
+git add style.css
+git commit -m "style: add login page styles"
+```
+
+---
+
+### Step 4 — Push `feature/login` to GitHub
+
+```bash
+git push -u origin feature/login
+```
+
+`-u` sets the tracking upstream — after this first push you can just run `git push`.
+
+---
+
+### Step 5 — Merge into `main`
+
+**Option A — Pull Request (recommended for teams)**
+
+1. Go to your repo on GitHub
+2. Click the banner: **"feature/login had recent pushes — Compare & pull request"**
+3. Set **base: `main`** ← compare: `feature/login`
+4. Fill in title and description → click **Create pull request**
+5. After review → click **Merge pull request** → **Confirm merge**
+6. Sync your local `main`:
+```bash
+git switch main
+git pull origin main
+```
+
+**Option B — Local merge (solo projects)**
+
+```bash
+git switch main
+git merge feature/login      # fast-forward if main has no new commits
+git push origin main
+```
+
+---
+
+### Step 6 — Delete the branch (clean up)
+
+```bash
+# Delete locally
+git branch -d feature/login
+
+# Delete on GitHub
+git push origin --delete feature/login
+```
+
+---
+
+### Full command sequence at a glance
+
+```bash
+# 1. Sync main
+git switch main
+git pull origin main
+
+# 2. Create feature branch
+git switch -c feature/login
+
+# 3. Work and commit
+git add .
+git commit -m "feat: add login page"
+
+# 4. Push to GitHub
+git push -u origin feature/login
+
+# 5a. Merge via PR on GitHub, then:
+git switch main
+git pull origin main
+
+# 5b. OR merge locally:
+git switch main
+git merge feature/login
+git push origin main
+
+# 6. Clean up
+git branch -d feature/login
+git push origin --delete feature/login
+```
 
 ---
 
